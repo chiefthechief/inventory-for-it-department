@@ -20,7 +20,7 @@ const IssueDevicePage = () => {
     useEffect(() => {
         const fetchAvailableDevices = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/devices?status=Available")
+                const response = await axios.get("https://inventory-for-it-department.onrender.com/devices?status=Available")
                 setAvailableDevices(response.data.devices)
             } catch (error) {
                 console.error("Failed to fetch available devices:", error)
@@ -41,7 +41,7 @@ const IssueDevicePage = () => {
         e.preventDefault()
 
         try {
-            const response = await axios.post("http://localhost:5000/issue", formData)
+            const response = await axios.post("https://inventory-for-it-department.onrender.com/issue", formData)
             console.log("Device issued successfully:", response.data)
 
             toast.success("Device issued successfully!", {

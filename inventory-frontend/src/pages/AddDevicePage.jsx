@@ -44,7 +44,7 @@ const AddDevicePage = () => {
     const handleSubmit = async e => {
         e.preventDefault()
         try {
-            await axios.post("http://localhost:5000/devices", formData)
+            await axios.post("https://inventory-for-it-department.onrender.com/devices", formData)
             toast.success("Device added successfully!")
             setTimeout(() => navigate("/"), 1500)
         } catch (error) {

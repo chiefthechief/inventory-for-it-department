@@ -13,7 +13,7 @@ const DeviceListPage = () => {
 
     const fetchDevices = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/devices")
+            const response = await axios.get("https://inventory-for-it-department.onrender.com/devices")
             setDevices(response.data.devices)
         } catch (error) {
             console.error("Failed to fetch devices", error)
@@ -22,7 +22,7 @@ const DeviceListPage = () => {
 
     const fetchRecentActivities = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/issue")
+            const response = await axios.get("https://inventory-for-it-department.onrender.com/issue")
             const sortedActivities = response.data.sort(
                 (a, b) => new Date(b.issueDate) - new Date(a.issueDate)
             )

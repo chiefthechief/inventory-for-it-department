@@ -14,7 +14,7 @@ const ReturnDevicePage = () => {
 
     const fetchIssuedDevices = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/issue")
+            const response = await axios.get("https://inventory-for-it-department.onrender.com/issue")
             const issued = response.data.filter(record => record.status === "Issued")
             setIssuedDevices(issued)
         } catch (error) {
@@ -24,7 +24,7 @@ const ReturnDevicePage = () => {
 
     const handleReturnDevice = async (id) => {
         try {
-            await axios.patch(`http://localhost:5000/issue/return/${id}`)
+            await axios.patch(`https://inventory-for-it-department.onrender.com/issue/return/${id}`)
             toast.success("Device returned successfully!")
             fetchIssuedDevices()
         } catch (error) {

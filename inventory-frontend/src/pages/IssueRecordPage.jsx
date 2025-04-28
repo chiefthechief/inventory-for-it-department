@@ -8,7 +8,7 @@ const IssueRecordPage = () => {
     useEffect(() => {
         const fetchIssueRecords = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/issue")
+                const response = await axios.get("https://inventory-for-it-department.onrender.com/issue")
                 setIssueRecords(response.data)
             } catch (error) {
                 setError("Error fetching issue records.")
