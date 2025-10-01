@@ -559,6 +559,13 @@ form input:focus, form select:focus {
     padding: 1rem;
   }
   
+  /* Stack header and align nicely on mobile */
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
   h1 {
     font-size: 1.5rem;
   }
@@ -567,8 +574,15 @@ form input:focus, form select:focus {
     grid-template-columns: repeat(2, 1fr);
   }
   
+  /* Allow horizontal scroll for wide tables */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   table {
     font-size: 0.875rem;
+    min-width: 640px; /* keep columns readable */
   }
   
   th, td {
@@ -597,9 +611,8 @@ form input:focus, form select:focus {
 }
 
 @media (max-width: 480px) {
-  .stats-container {
-    grid-template-columns: 1fr;
-  }
+  /* Single column stats on very small screens */
+  .stats-grid { grid-template-columns: 1fr; }
   
   h1 {
     font-size: 1.75rem;
@@ -608,11 +621,16 @@ form input:focus, form select:focus {
   .btn {
     width: 100%;
     justify-content: center;
+    padding: 0.65rem 1rem;
   }
   
   .table-container {
     border-radius: 8px;
   }
+
+  /* Slightly reduce stat size for compact view */
+  .stat-value { font-size: 1.6rem; }
+  .stat-card { padding: 1.1rem; }
 }
 
 /* Print styles */
