@@ -13,7 +13,7 @@ const AddDevicePage = () => {
         "Monitor",
         "Barcode Scanner",
         "Extension Board",
-        "Mice",
+        "Mouse",
         "Keyboard"
     ]
 
@@ -23,7 +23,7 @@ const AddDevicePage = () => {
         Monitor: ["LG", "Samsung", "Acer"],
         "Barcode Scanner": ["Honeywell", "Symbol", "Datalogic"],
         "Extension Board": ["Anchor", "GM", "Philips"],
-        Mice: ["Logitech", "HP", "Dell"],
+        Mouse: ["Logitech", "HP", "Dell"],
         Keyboard: ["Logitech", "Dell", "HP"]
     }
 
@@ -54,109 +54,108 @@ const AddDevicePage = () => {
     }
 
     return (
-        <div className="max-w-xl mx-auto p-6 space-y-6">
-            <h1 className="text-3xl font-bold">Add New Device</h1>
+        <div className="container">
+            <div className="text-center" style={{ marginBottom: "2rem" }}>
+                <h1>Add New Device</h1>
+            </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Device Type */}
-                <div>
-                    <label className="block mb-1 font-medium">Device Type</label>
-                    <select
-                        name="type"
-                        value={formData.type}
-                        onChange={handleChange}
-                        required
-                        className="w-full border px-3 py-2 rounded"
-                    >
-                        <option value="">Select device type</option>
-                        {deviceTypes.map(type => (
-                            <option key={type} value={type}>{type}</option>
-                        ))}
-                    </select>
+            <div className="card form-card">
+                <div className="card-header">
+                    <h2 className="card-title">Device Details</h2>
                 </div>
-
-                {/* Brand */}
-                <div>
-                    <label className="block mb-1 font-medium">Brand</label>
-                    <select
-                        name="brand"
-                        value={formData.brand}
-                        onChange={handleChange}
-                        required
-                        disabled={!formData.type}
-                        className="w-full border px-3 py-2 rounded"
-                    >
-                        <option value="">Select brand</option>
-                        {formData.type &&
-                            brandOptions[formData.type].map(brand => (
-                                <option key={brand} value={brand}>{brand}</option>
+                <form onSubmit={handleSubmit}>
+                    {/* Device Type */}
+                    <div className="form-group">
+                        <label>Device Type</label>
+                        <select
+                            name="type"
+                            value={formData.type}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="">Select device type</option>
+                            {deviceTypes.map(type => (
+                                <option key={type} value={type}>{type}</option>
                             ))}
-                    </select>
-                </div>
+                        </select>
+                    </div>
 
-                {/* Serial Number */}
-                <div>
-                    <label className="block mb-1 font-medium">Serial Number</label>
-                    <input
-                        type="text"
-                        name="serialNumber"
-                        value={formData.serialNumber}
-                        onChange={handleChange}
-                        required
-                        className="w-full border px-3 py-2 rounded"
-                    />
-                </div>
+                    {/* Brand */}
+                    <div className="form-group">
+                        <label>Brand</label>
+                        <select
+                            name="brand"
+                            value={formData.brand}
+                            onChange={handleChange}
+                            required
+                            disabled={!formData.type}
+                        >
+                            <option value="">Select brand</option>
+                            {formData.type &&
+                                brandOptions[formData.type].map(brand => (
+                                    <option key={brand} value={brand}>{brand}</option>
+                                ))}
+                        </select>
+                    </div>
 
-                {/* Model */}
-                <div>
-                    <label className="block mb-1 font-medium">Model</label>
-                    <input
-                        type="text"
-                        name="model"
-                        value={formData.model}
-                        onChange={handleChange}
-                        required
-                        className="w-full border px-3 py-2 rounded"
-                    />
-                </div>
+                    {/* Serial Number */}
+                    <div className="form-group">
+                        <label>Serial Number</label>
+                        <input
+                            type="text"
+                            name="serialNumber"
+                            value={formData.serialNumber}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
 
-                {/* Status */}
-                <div>
-                    <label className="block mb-1 font-medium">Status</label>
-                    <select
-                        name="status"
-                        value={formData.status}
-                        onChange={handleChange}
-                        required
-                        className="w-full border px-3 py-2 rounded"
-                    >
-                        <option value="Available">Available</option>
-                        <option value="Issued">Issued</option>
-                        <option value="Under Maintenance">Under Maintenance</option>
-                        <option value="Retired">Retired</option>
-                    </select>
-                </div>
+                    {/* Model */}
+                    <div className="form-group">
+                        <label>Model</label>
+                        <input
+                            type="text"
+                            name="model"
+                            value={formData.model}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
 
-                {/* Date Added */}
-                <div>
-                    <label className="block mb-1 font-medium">Date Added</label>
-                    <input
-                        type="date"
-                        name="dateAdded"
-                        value={formData.dateAdded}
-                        onChange={handleChange}
-                        required
-                        className="w-full border px-3 py-2 rounded"
-                    />
-                </div>
+                    {/* Status */}
+                    <div className="form-group">
+                        <label>Status</label>
+                        <select
+                            name="status"
+                            value={formData.status}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="Available">Available</option>
+                            <option value="Issued">Issued</option>
+                            <option value="Under Maintenance">Under Maintenance</option>
+                            <option value="Retired">Retired</option>
+                        </select>
+                    </div>
 
-                <button
-                    type="submit"
-                    className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-                >
-                    Add Device
-                </button>
-            </form>
+                    {/* Date Added */}
+                    <div className="form-group">
+                        <label>Date Added</label>
+                        <input
+                            type="date"
+                            name="dateAdded"
+                            value={formData.dateAdded}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <button type="button" className="btn btn-secondary" onClick={() => navigate(-1)}>Cancel</button>
+                        <button type="submit" className="btn btn-primary">Add Device</button>
+                    </div>
+                </form>
+            </div>
 
             <ToastContainer />
         </div>

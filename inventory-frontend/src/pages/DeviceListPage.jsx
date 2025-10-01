@@ -5,6 +5,11 @@ import axios from "axios"
 const DeviceListPage = () => {
     const [devices, setDevices] = useState([])
     const [recentActivities, setRecentActivities] = useState([])
+    const [activeTab, setActiveTab] = useState("devices")
+    const [loadingDevices, setLoadingDevices] = useState(true)
+    const [loadingActivities, setLoadingActivities] = useState(true)
+    const [visibleDevicesCount, setVisibleDevicesCount] = useState(10)
+    const [visibleActivitiesCount, setVisibleActivitiesCount] = useState(10)
 
     useEffect(() => {
         fetchDevices()
@@ -13,22 +18,28 @@ const DeviceListPage = () => {
 
     const fetchDevices = async () => {
         try {
+            setLoadingDevices(true)
             const response = await axios.get("https://inventory-for-it-department.onrender.com/devices")
             setDevices(response.data.devices)
         } catch (error) {
             console.error("Failed to fetch devices", error)
+        } finally {
+            setLoadingDevices(false)
         }
     }
 
     const fetchRecentActivities = async () => {
         try {
+            setLoadingActivities(true)
             const response = await axios.get("https://inventory-for-it-department.onrender.com/issue")
             const sortedActivities = response.data.sort(
                 (a, b) => new Date(b.issueDate) - new Date(a.issueDate)
             )
-            setRecentActivities(sortedActivities.slice(0, 8))
+            setRecentActivities(sortedActivities)
         } catch (error) {
             console.error("Failed to fetch issue records", error)
+        } finally {
+            setLoadingActivities(false)
         }
     }
 
@@ -39,105 +50,178 @@ const DeviceListPage = () => {
     const retiredDevices = devices.filter(d => d.status === "Retired").length
 
     return (
-        <div className="max-w-6xl mx-auto p-6 space-y-8">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">Inventory Dashboard</h1>
-                <div className="space-x-4">
-                    <Link to="/devices/add">
-                        <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Add New Device</button>
+        <div className="container">
+            {(loadingDevices || loadingActivities) && (
+                <div className="progress"><div className="progress-bar" /></div>
+            )}
+            {/* Header */}
+            <div className="header">
+                <h1>Inventory Dashboard</h1>
+                <div className="action-buttons">
+                    <Link to="/devices/add" className="btn btn-primary">
+                        Add New Device
                     </Link>
-                    <Link to="/devices/issue">
-                        <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Issue Device</button>
+                    <Link to="/devices/issue" className="btn btn-success">
+                        Issue Device
                     </Link>
-                    <Link to="/devices/return">
-                        <button className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition">Return Device</button>
+                    <Link to="/devices/return" className="btn btn-warning">
+                        Return Device
                     </Link>
                 </div>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-blue-600 text-white p-6 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-2">Total Devices</h2>
-                    <p className="text-3xl">{totalDevices}</p>
+            <div className="stats-grid">
+                <div className="stat-card total">
+                    <div className="stat-value">{totalDevices}</div>
+                    <div className="stat-label">Total Devices</div>
                 </div>
-                <div className="bg-green-600 text-white p-6 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-2">Available</h2>
-                    <p className="text-3xl">{availableDevices}</p>
+                <div className="stat-card available">
+                    <div className="stat-value">{availableDevices}</div>
+                    <div className="stat-label">Available</div>
                 </div>
-                <div className="bg-yellow-500 text-white p-6 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-2">Maintenance</h2>
-                    <p className="text-3xl">{maintenanceDevices}</p>
+                <div className="stat-card maintenance">
+                    <div className="stat-value">{maintenanceDevices}</div>
+                    <div className="stat-label">Maintenance</div>
                 </div>
-                <div className="bg-red-600 text-white p-6 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-2">Issued</h2>
-                    <p className="text-3xl">{issuedDevices}</p>
+                <div className="stat-card issued">
+                    <div className="stat-value">{issuedDevices}</div>
+                    <div className="stat-label">Issued</div>
                 </div>
-                <div className="bg-red-600 text-white p-6 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-2">Retired</h2>
-                    <p className="text-3xl">{retiredDevices}</p>
-                </div>
-            </div>
-
-            {/* Device List */}
-            <div>
-                <h2 className="text-2xl font-bold mb-4">Device List</h2>
-                <div className="bg-white shadow rounded overflow-x-auto">
-                    <table className="w-full text-left">
-                        <thead className="bg-gray-100">
-                            <tr>
-                                <th className="px-4 py-2">Device Type</th>
-                                <th className="px-4 py-2">Serial No.</th>
-                                <th className="px-4 py-2">Brand</th>
-                                <th className="px-4 py-2">Model</th>
-                                <th className="px-4 py-2">Status</th>
-                                <th className="px-4 py-2">Date Added</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {devices.map(device => (
-                                <tr key={device._id} className="border-t">
-                                    <td className="px-4 py-2">{device.type}</td>
-                                    <td className="px-4 py-2">{device.serialNumber}</td>
-                                    <td className="px-4 py-2">{device.brand}</td>
-                                    <td className="px-4 py-2">{device.model}</td>
-                                    <td className="px-4 py-2 capitalize">{device.status}</td>
-                                    <td className="px-4 py-2">{new Date(device.dateAdded).toLocaleDateString()}</td>
-                                </tr>
-                            ))}
-                            {devices.length === 0 && (
-                                <tr>
-                                    <td colSpan="6" className="px-4 py-4 text-center text-gray-500">No devices in inventory</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                <div className="stat-card retired">
+                    <div className="stat-value">{retiredDevices}</div>
+                    <div className="stat-label">Retired</div>
                 </div>
             </div>
 
-            {/* Recent Activities */}
-            <div className="overflow-x-auto mt-6">
-                <h2 className="text-xl font-semibold mb-3">Recent Activities</h2>
-                <table className="min-w-full border border-gray-300">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            <th className="p-2 border">Device</th>
-                            <th className="p-2 border">Issued To</th>
-                            <th className="p-2 border">Purpose</th>
-                            <th className="p-2 border">Issue Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {recentActivities.map(record => (
-                            <tr key={record._id} className="text-center">
-                                <td className="p-2 border">{record.device?.type} - {record.device?.brand}</td>
-                                <td className="p-2 border">{record.personName}</td>
-                                <td className="p-2 border">{record.purpose}</td>
-                                <td className="p-2 border">{new Date(record.issueDate).toLocaleDateString()}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+            {/* Tabs Container */}
+            <div className="tabs-container">
+                <div className="tabs-header">
+                    <button
+                        className={`tab-button ${activeTab === "devices" ? "active" : ""}`}
+                        onClick={() => setActiveTab("devices")}
+                    >
+                        Device List
+                    </button>
+                    <button
+                        className={`tab-button ${activeTab === "activities" ? "active" : ""}`}
+                        onClick={() => setActiveTab("activities")}
+                    >
+                        Recent Activities
+                    </button>
+                </div>
+
+                {/* Devices Tab */}
+                <div className={`tab-content ${activeTab === "devices" ? "active" : ""}`}>
+                    <div className="table-container">
+                        {loadingDevices ? (
+                            <div className="empty-state">
+                                <p>Fetching data...</p>
+                            </div>
+                        ) : (
+                            <>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                                <th>Device Type</th>
+                                                <th>Serial No.</th>
+                                                <th>Brand</th>
+                                                <th>Model</th>
+                                                <th>Status</th>
+                                                <th>Date Added</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {devices.slice(0, visibleDevicesCount).map(device => (
+                                                <tr key={device._id}>
+                                                    <td>{device.type}</td>
+                                                    <td>{device.serialNumber}</td>
+                                                    <td>{device.brand}</td>
+                                                    <td>{device.model}</td>
+                                                    <td>
+                                                        <span className={`status-badge status-${device.status.toLowerCase().replace(' ', '-')}`}>
+                                                            {device.status}
+                                                        </span>
+                                                    </td>
+                                                    <td>{new Date(device.dateAdded).toLocaleDateString()}</td>
+                                                </tr>
+                                            ))}
+                                            {devices.length === 0 && (
+                                                <tr>
+                                                    <td colSpan="6" className="empty-state">
+                                                        <div className="empty-state-icon">📱</div>
+                                                        <p>No devices in inventory</p>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                <div className="flex justify-end items-center" style={{ padding: "0.75rem 1rem" }}>
+                                    <div className="action-buttons" style={{ marginBottom: 0 }}>
+                                        {visibleDevicesCount > 10 && (
+                                            <button type="button" className="btn btn-secondary" onClick={() => setVisibleDevicesCount(10)}>View less</button>
+                                        )}
+                                        {visibleDevicesCount < devices.length && (
+                                            <button type="button" className="btn btn-primary" onClick={() => setVisibleDevicesCount(prev => Math.min(prev + 5, devices.length))}>View more</button>
+                                        )}
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+
+                {/* Activities Tab */}
+                <div className={`tab-content ${activeTab === "activities" ? "active" : ""}`}>
+                    <div className="table-container">
+                        {loadingActivities ? (
+                            <div className="empty-state">
+                                <p>Fetching data...</p>
+                            </div>
+                        ) : (
+                            <>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                                <th>Device</th>
+                                                <th>Issued To</th>
+                                                <th>Purpose</th>
+                                                <th>Issue Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {recentActivities.slice(0, visibleActivitiesCount).map(record => (
+                                                <tr key={record._id}>
+                                                    <td>{record.device?.type} - {record.device?.brand}</td>
+                                                    <td>{record.personName}</td>
+                                                    <td>{record.purpose}</td>
+                                                    <td>{new Date(record.issueDate).toLocaleDateString()}</td>
+                                                </tr>
+                                            ))}
+                                            {recentActivities.length === 0 && (
+                                                <tr>
+                                                    <td colSpan="4" className="empty-state">
+                                                        <div className="empty-state-icon">📋</div>
+                                                        <p>No recent activities</p>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                <div className="flex justify-end items-center" style={{ padding: "0.75rem 1rem" }}>
+                                    <div className="action-buttons" style={{ marginBottom: 0 }}>
+                                        {visibleActivitiesCount > 10 && (
+                                            <button type="button" className="btn btn-secondary" onClick={() => setVisibleActivitiesCount(10)}>View less</button>
+                                        )}
+                                        {visibleActivitiesCount < recentActivities.length && (
+                                            <button type="button" className="btn btn-primary" onClick={() => setVisibleActivitiesCount(prev => Math.min(prev + 5, recentActivities.length))}>View more</button>
+                                        )}
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
     )

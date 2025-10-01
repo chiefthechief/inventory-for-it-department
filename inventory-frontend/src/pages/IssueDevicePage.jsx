@@ -61,114 +61,97 @@ const IssueDevicePage = () => {
     }
 
     return (
-        <div className="max-w-6xl mx-auto p-6">
+        <div className="container">
             <ToastContainer />
 
-            <div className="flex items-center justify-between mb-6">
-                <h1 className="text-3xl font-bold">Issue Device</h1>
-
-                {/* ✅ Link to Device List Page */}
-                <Link
-                    to="/devices"
-                    className="text-blue-600 hover:underline"
-                >
-                    View Device List
-                </Link>
+            <div className="header">
+                <h1>Issue Device</h1>
+                <div className="action-buttons">
+                    <Link to="/devices" className="btn btn-secondary">View Device List</Link>
+                </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Device Selection */}
-                <div>
-                    <label htmlFor="deviceId" className="block font-semibold">
-                        Select Device
-                    </label>
-                    <select
-                        id="device"
-                        name="device"
-                        value={formData.device}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                    >
-                        <option value="">Select a device</option>
-                        {availableDevices.map((device) => (
-                            <option key={device._id} value={device._id}>
-                                {device.type} - {device.brand}
-                            </option>
-                        ))}
-                    </select>
+            <div className="card form-card">
+                <div className="card-header">
+                    <h2 className="card-title">Issue Details</h2>
                 </div>
+                <form onSubmit={handleSubmit}>
+                    {/* Device Selection */}
+                    <div className="form-group">
+                        <label htmlFor="device">Select Device</label>
+                        <select
+                            id="device"
+                            name="device"
+                            value={formData.device}
+                            onChange={handleInputChange}
+                            required
+                        >
+                            <option value="">Select a device</option>
+                            {availableDevices.map((device) => (
+                                <option key={device._id} value={device._id}>
+                                    {device.type} - {device.brand}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
-                {/* Person Name */}
-                <div>
-                    <label htmlFor="personName" className="block font-semibold">
-                        Person's Name
-                    </label>
-                    <input
-                        type="text"
-                        id="personName"
-                        name="personName"
-                        value={formData.personName}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                    />
-                </div>
+                    {/* Person Name */}
+                    <div className="form-group">
+                        <label htmlFor="personName">Person's Name</label>
+                        <input
+                            type="text"
+                            id="personName"
+                            name="personName"
+                            value={formData.personName}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
 
-                {/* Contact Info */}
-                <div>
-                    <label htmlFor="contactInfo" className="block font-semibold">
-                        Contact Info
-                    </label>
-                    <input
-                        type="text"
-                        id="contactInfo"
-                        name="contactInfo"
-                        value={formData.contactInfo}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                    />
-                </div>
+                    {/* Contact Info */}
+                    <div className="form-group">
+                        <label htmlFor="contactInfo">Contact Info</label>
+                        <input
+                            type="text"
+                            id="contactInfo"
+                            name="contactInfo"
+                            value={formData.contactInfo}
+                            onChange={handleInputChange}
+                        />
+                    </div>
 
-                {/* Purpose */}
-                <div>
-                    <label htmlFor="purpose" className="block font-semibold">
-                        Purpose
-                    </label>
-                    <input
-                        type="text"
-                        id="purpose"
-                        name="purpose"
-                        value={formData.purpose}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                    />
-                </div>
+                    {/* Purpose */}
+                    <div className="form-group">
+                        <label htmlFor="purpose">Purpose</label>
+                        <input
+                            type="text"
+                            id="purpose"
+                            name="purpose"
+                            value={formData.purpose}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
 
-                {/* Issue Date */}
-                <div>
-                    <label htmlFor="issueDate" className="block font-semibold">
-                        Issue Date
-                    </label>
-                    <input
-                        type="date"
-                        id="issueDate"
-                        name="issueDate"
-                        value={formData.issueDate}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                    />
-                </div>
+                    {/* Issue Date */}
+                    <div className="form-group">
+                        <label htmlFor="issueDate">Issue Date</label>
+                        <input
+                            type="date"
+                            id="issueDate"
+                            name="issueDate"
+                            value={formData.issueDate}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
 
-                {/* Submit Button */}
-                <div>
-                    <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-                        Issue Device
-                    </button>
-                </div>
-            </form>
+                    <div className="flex justify-between items-center">
+                        <Link to="/devices" className="btn btn-secondary">Cancel</Link>
+                        <button type="submit" className="btn btn-primary">Issue Device</button>
+                    </div>
+                </form>
+            </div>
         </div>
     )
 }
